@@ -1,7 +1,8 @@
 const Product = require("../models/productModel");
 const ErrorHander = require("../utils/errorhander");
 
-const catchAsyncErrors = require("../middleware/catchAsyncErrors")
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const ApiFeatures = require("../utils/apifeatures");
 // here we have not used try catch block till now,
 // it's considered to be good practice to include try catch block in async functions
 // eg. if i want to create an object with no name it will still passed in db through postman
@@ -18,7 +19,10 @@ exports.createProduct = catchAsyncErrors(async (req,res,next)=>{
 
 // get all products
 exports.getAllProducts = catchAsyncErrors(async(req,res) =>{
-    const products = await Product.find();
+    const apiFeature = new ApiFeatures(Product.find(),req.query).search();
+    // const products = await Product.find();
+    // since apiFeature is class, we want to access it's properties
+    const products = await apiFeature.query; //this will return {"success": true,"products": []}
     // res.status(200).json({message:"Route is working fine"})
     res.status(200).json({
         success:true,
