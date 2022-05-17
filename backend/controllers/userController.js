@@ -2,6 +2,7 @@ const ErrorHander = require('../utils/errorhander');
 const catchAsyncErrors = require('../middleware/catchAsyncErrors');
 const User = require('../models/userModel');
 const sendToken = require('../utils/jwtToken');
+const sendMail = require('../utils/sendEmail');
 
 // register a user
 exports.registerUser = catchAsyncErrors(async(req,res,next)=>{
@@ -69,7 +70,8 @@ exports.loginUser = catchAsyncErrors(async(req,res,next)=>{
 
     // instead of creating token and sending status, we'll add utils jwtToken for reducing lines of codeship
     sendToken(user, 200, res);
-})
+});
+
 
 // logout
 exports.logout = catchAsyncErrors(async(req,res,next)=>{
@@ -84,3 +86,46 @@ exports.logout = catchAsyncErrors(async(req,res,next)=>{
         message:"Logged out"
     })
 })
+
+// forgot password
+exports.forgotPassword = catchAsyncErrors(async(req,res,next)=>{
+    const user = await User.findOne({ email:req.body.email });
+
+    // console.log(user);
+    if(!user)
+    {
+        return next(new ErrorHander("User not found",404))
+    }
+
+    // get reset password
+    const resetToken = user.getResetPasswordToken();
+    await user.save({validateBeforeSave: false});
+    console.log(resetToken);
+
+    // const resetPasswordUrl = `http://localhost/api/v1/password/reset/${resetToken}`;
+    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/api/v1/password/reset/${resetToken}`;
+
+    const message = `Your reset password token is:- \n\n ${resetPasswordUrl} \n\n If you have not requested this mail then please ignore it`;
+
+    try {
+
+        await sendMail({
+            email:user.email,
+            subject:'Ecommerce Password Recovery',
+            message,
+        })
+
+        res.status(200).json({
+            success:true,
+            message: `Email send to ${user.email} successfully`
+        });
+        
+    } catch (err) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordToken = undefined;
+        await user.save({validateBeforeSave: false});
+        return next(new ErrorHander(err.message,500));
+        // console.error(err);        
+    }
+
+});

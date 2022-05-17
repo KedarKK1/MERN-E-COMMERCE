@@ -9,6 +9,10 @@ const ApiFeatures = require("../utils/apifeatures");
 // hence it's always good to follow try catch block
 // so instead of adding try-catch block at each function, we'll have a code for try-catch block
 exports.createProduct = catchAsyncErrors(async (req,res,next)=>{
+
+    // here what we're doing is that passing req.body's id as req.body's user so in products database Schema's user field get id of this request user's id 
+    req.body.user = req.user.id;
+
     const product = await Product.create(req.body);
 
     res.status(201).json({
