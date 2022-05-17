@@ -70,3 +70,17 @@ exports.loginUser = catchAsyncErrors(async(req,res,next)=>{
     // instead of creating token and sending status, we'll add utils jwtToken for reducing lines of codeship
     sendToken(user, 200, res);
 })
+
+// logout
+exports.logout = catchAsyncErrors(async(req,res,next)=>{
+
+    res.cookie("token",null,{
+        expires:new Date(Date.now()),
+        httpOnly:true,
+    })
+
+    res.json({
+        success:true,
+        message:"Logged out"
+    })
+})
