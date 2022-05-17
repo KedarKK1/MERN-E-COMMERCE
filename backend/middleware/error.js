@@ -1,3 +1,4 @@
+const ErrorHander = require('../utils/errorhander');
 const ErrorHandler = require('../utils/errorhander')
 
 module.exports = (err, req, res, next) =>{
@@ -9,6 +10,25 @@ module.exports = (err, req, res, next) =>{
     // we have used regex for avoiding such condition but still if any error happens then for that 
     if(err.name == "CastError"){
         const message = `Cast error could be that url dont have 24 digit hexadecimal no. Invalid:${err.path}`;
+        err = new ErrorHandler(message, 400);
+    }
+
+    // mongodb duplicate id error for same email
+    if(err.code == 11000)
+    {
+        const message = `Duplicate ${Object.keys(err.keyValue)} Entered`;
+        err = new ErrorHander(message, 400);
+    }
+
+    // jwt error 
+    if(err.name == "JsonWebTokenError"){
+        const message = `Json Web Token Invalid, Please try again `;
+        err = new ErrorHandler(message, 400);
+    }
+
+    // jwt expired error 
+    if(err.name == "TokenExpiredError"){
+        const message = `Json Web Token is expired, Please try again `;
         err = new ErrorHandler(message, 400);
     }
 
