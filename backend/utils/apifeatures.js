@@ -32,7 +32,7 @@ class ApiFeatures{
         // below this.queryStr is an object's reference hence it is reference to that object hence we have to use below to make it object not reference
         // const queryCopy = {...this.queryStr}
         const queryCopy = {...this.queryStr}
-        console.log(queryCopy);
+        // console.log(queryCopy);
         // removing some fields for category
         // eg. we'll be removing ?keywords after tag
         const removeFields = ["keyword","page","limit"];

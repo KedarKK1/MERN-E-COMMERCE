@@ -123,3 +123,54 @@ exports.deleteProduct = catchAsyncErrors(async (req,res,next)=>{
 
     next();
 });
+
+// Create new review or update new review
+exports.createProductReview = catchAsyncErrors(async(req,res,next)=>{
+
+    const {rating, comment, productId} = req.body;
+
+    const review = {
+        user:req.user._id,
+        name:req.user.name,
+        rating:Number(rating),
+        comment,
+    };
+
+    // Product is in schema and product is founded object querry
+    
+    const product = await Product.findById(productId);
+    // isReviewd me check karre ki kya is particular user ne pehelehi review diya hai kya iss product ke liye.
+    const isReviewed = product.reviews.find((rev) => rev.user.toString() === req.user._id.toString()); //for any variable rev find rev.user which is an mongoose ObjectId hence it should be converted into string 
+
+    // console.log(product.reviews.length)
+    if(isReviewed)
+    {
+        product.reviews.forEach((rev) => {
+            if(rev.user.toString() === req.user._id.toString())
+                (rev.rating=rating),
+                (rev.comment=comment),
+                (product.numOfReview=product.reviews.length)
+        });
+    }
+    else
+    {
+        // console.log("En this loop");
+        product.reviews.push(review);
+        product.numOfReview = product.reviews.length;
+    }
+
+    // Note ratings is a different schema attribute and in review there's different attribute rating
+    // eg 4,5,3 => 12/3 = 4.
+    let avg=0;
+    // Note- we cant have product.rating = product.reviews.forEach(.........) etc it will not work
+    product.reviews.forEach((rev) =>{
+        avg += rev.rating; //this will return sum of all rating
+    });
+
+    product.ratings = (avg / product.reviews.length)
+    await product.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+        success:true,
+    })
+});

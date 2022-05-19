@@ -101,7 +101,7 @@ exports.forgotPassword = catchAsyncErrors(async(req,res,next)=>{
     // get reset password
     const resetToken = user.getResetPasswordToken();
     await user.save({validateBeforeSave: false});
-    console.log(resetToken);
+    // console.log(resetToken);
 
     // const resetPasswordUrl = `http://localhost/api/v1/password/reset/${resetToken}`;
     const resetPasswordUrl = `${req.protocol}://${req.get("host")}/api/v1/password/reset/${resetToken}`;
@@ -165,3 +165,126 @@ exports.resetPassword = catchAsyncErrors(async(req,res,next)=>{
     // after successfull change of password, we'll automatically mak user login
     sendToken(user,200,res);    
 });
+
+// get user details
+exports.getUserDetails = catchAsyncErrors(async(req,res,next)=>{
+    const user = await User.findById(req.user.id);
+    // this route can be only accessed by user which have loggedIn, hence we do not need if(!user)
+
+    res.status(200).json({
+        success:true,
+        user,
+    });
+    // this will show everything except passwrd since password is not selected
+});
+
+// update user password
+exports.updateUserPassword = catchAsyncErrors(async(req,res,next)=>{
+    const user = await User.findById(req.user.id).select("password");
+    // this route can be only accessed by user which have loggedIn, and that too we'll have to select password hence we do not need if(!user)
+
+    // for above user comparing password
+    const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
+
+    if(!isPasswordMatched)
+    {
+        return next(new ErrorHander("Old password is incorrect",400));
+        // here we cant show invalid password as an unknown user may try an email with some random password therby knowing that this email id exists for an account 
+    }
+
+    if(req.body.newPassword !== req.body.confirmPassword)
+    {
+        return next(new ErrorHander("Password does not match", 400));
+    }
+
+    user.password = req.body.newPassword;
+
+    await user.save();
+
+    sendToken(user,200,res);
+});
+
+// update user profile
+exports.updateUserProfile = catchAsyncErrors(async(req,res,next)=>{
+    // Note - if user wan to change only one field say change only name and others to be same, what we'll do is we'll use previously stored value in frontend and use them here as default
+    const newUserData={
+        name:req.body.name,
+        email:req.body.email,
+        // we'll add cloudinary for images later
+    };
+
+    const user = await User.findByIdAndUpdate(req.user.id, newUserData,{
+        new:true,
+        runValidators:true,
+        useFindAndModify:false,
+    });
+
+    res.status(200).json({
+        success:true,
+    });
+});
+
+// get all user details for admin 
+exports.getAllUsers = catchAsyncErrors(async(req,res,next)=>{
+    // for finding all users
+    const users = await User.find();
+
+    res.status(200).json({
+        success:true,
+        users,
+    });
+});
+
+// get a pcarticular user details for admin 
+exports.getSingleUser = catchAsyncErrors(async(req,res,next)=>{
+    const user = await User.findById(req.params.id);
+
+    if(!user)
+    {
+        return next(new ErrorHander(`User does not exists with this is: ${req.params.id}`),400);
+    }
+
+    res.status(200).json({
+        success:true,
+        user,
+    });
+});
+
+// update user role by Admin 
+exports.updateUserRole = catchAsyncErrors(async(req,res,next)=>{
+    // Note - if user wan to change only one field say change only name and others to be same, what we'll do is we'll use previously stored value in frontend and use them here as default
+    const newUserData={
+        name:req.body.name,
+        email:req.body.email,
+        role:req.body.role,
+    };
+    const user = await User.findByIdAndUpdate(req.user.id, newUserData,{
+        new:true,
+        runValidators:true,
+        useFindAndModify:false,
+    });
+
+    res.status(200).json({
+        success:true,
+    });
+});
+
+// delete user by Admin 
+exports.deleteUser = catchAsyncErrors(async(req,res,next)=>{
+
+    const user = await User.findById(req.params.id);
+
+    if(!user)
+    {
+        return next(new ErrorHander(`User does not exists with this is: ${req.params.id}`),400);
+    }
+
+    await user.remove();
+
+    // we'll remove clouding later
+    res.status(200).json({
+        success:true,
+        message: 'User deleted successfully'
+    });
+});
+
