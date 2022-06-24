@@ -7,6 +7,9 @@ import { Route } from 'react-router-dom';
 import webFont from 'webfontloader';
 import React from 'react';
 import ProductDetails from './components/Product/ProductDetails.js'
+import Products from './components/Product/Products.js'
+import Search from './components/Product/Search.js'
+
 
 function App() {
 
@@ -25,10 +28,13 @@ function App() {
     // <Router >
       <>
       <Header />
-      // {/* <Switch> */}
+      {/* <Switch> */}
         <Route exact path="/" component={Home} />
         <Route exact path="/product/:id" component={ProductDetails} />
-      // {/* </Switch> */}
+        <Route exact path="/products" component={Products} />
+        <Route path="/products/:keyword" component={Products} />
+        <Route path="/search" component={Search} />
+      {/* </Switch> */}
       <Footer />
       </>
     // {/* </Router > */}

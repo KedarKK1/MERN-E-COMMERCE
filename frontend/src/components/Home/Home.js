@@ -24,7 +24,7 @@ const Home = () => {
     const dispatch = useDispatch();
 
     // to access data from getProduct we'll use useSelector
-    const { loading , error, products, productCount } = useSelector((state)=>state.products);
+    const { loading , error, products, productCount, resultPerPage } = useSelector((state)=>state.products);
 
     useEffect(() => {
         if(error) {

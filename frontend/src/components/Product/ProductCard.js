@@ -6,12 +6,12 @@ import { Rating } from '@mui/material';
 
 const ProductCard = ({ product }) => {
 
-  function refreshPage() {
-    setTimeout(() => {
-      window.location.reload(false);
-    }, 500);
+  // function refreshPage() {
+  //   setTimeout(() => {
+  //     window.location.reload(false);
+  //   }, 500);
     // console.log('page to reload else not')
-  }
+  // }
 
   // const options = {
   //   edit: false,
@@ -28,15 +28,17 @@ const ProductCard = ({ product }) => {
     readOnly: true,
     precision: 0.5,
   }
+
+  // <Link className="productCard" to={`/product/${product._id}`} onClick={refreshPage}  >
+  
   return (
-    <Link className="productCard" to={`/product/${product._id}`} onClick={refreshPage}  >
+    <Link className="productCard" to={`/product/${product._id}`} >
       <img src={product.images[0].url} alt={product.name} />
       <p>{product.name}</p>
       <div>
-        {" "}
+        
         {/* <ReviewCard {...options} review={product.reviews} /> */}
-        <Rating {...options2} />
-        <span>( {product.numOfReview} reviews)</span>
+        <span><Rating {...options2} /> ({product.numOfReview} reviews)</span>
       </div>
       <span>{`₹${product.price}`}</span>
 
