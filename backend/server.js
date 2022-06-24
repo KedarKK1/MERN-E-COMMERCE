@@ -1,7 +1,7 @@
 const app = require('./app');
 
 const dotenv = require('dotenv');
-dotenv.config({path:"./backend/config/config.env"});
+dotenv.config({path:"./config/config.env"});
 
 // for uncaugh errors that is if i print console.log(youtube) where youtube is not a string then it is called uncaught reference errors
 process.on("uncaughtException", (err)=>{
@@ -18,15 +18,15 @@ process.on("uncaughtException", (err)=>{
 const connectDatabase = require('./config/database')
 connectDatabase()
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://admin:admin@cluster0.cz97f.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  console.log(err);
-  // perform actions on the collection object
-  client.close();
-});
+// const { MongoClient, ServerApiVersion } = require('mongodb');
+// const uri = "mongodb+srv://admin:admin@cluster0.cz97f.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+// client.connect(err => {
+//   const collection = client.db("test").collection("devices");
+//   console.log(err);
+//   // perform actions on the collection object
+//   client.close();
+// });
 
 // mongoose.connect(dbUrl,{
 //     useFindAndModify: true,
@@ -71,7 +71,7 @@ const PORT = process.env.PORT || 4321;
 
 app.listen(PORT, ()=>{
     console.log(`Server is running and listening on port ${PORT}`);
-})
+});
 
 
 // for Unhandled Promise Rejection errors i.e. let's say someone changes your mongodb api code in .env file then it will give server error code

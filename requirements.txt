@@ -1,0 +1,4 @@
+for in installing react in some folder use npx react-create-app
+in frontned installed axios react-alert react-alert-template-basic react-helmet react-redux redux redux-thunk redux-devtools-extension react-router-dom overlay-navbar react-icons
+use an unmade component and put its import ..... from ..... and then cntr+left-click on that import wali line to make a component that
+use webfontloader

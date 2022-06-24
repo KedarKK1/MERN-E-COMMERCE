@@ -22,9 +22,12 @@ exports.createProduct = catchAsyncErrors(async (req,res,next)=>{
 });
 
 // get all products
-exports.getAllProducts = catchAsyncErrors(async(req,res) =>{
+exports.getAllProducts = catchAsyncErrors(async(req,res, next) =>{
 
-    const resultPerPage = 2;
+    // for testing if alert in react-alert is working or not in Home.js
+    // return next(new ErrorHander("This is my temp error",500));
+
+    const resultPerPage = 8;
 
     const productCount = await Product.countDocuments();
 

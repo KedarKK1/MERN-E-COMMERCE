@@ -5,7 +5,8 @@ const { isAuthenticatedUser, authorizeRoles } = require('../middleware/auth');
 const router = express.Router();
 
 // middleware for authenticated user so only logged in users can access products
-router.route("/product").get(isAuthenticatedUser, getAllProducts);
+// router.route("/product").get(isAuthenticatedUser, getAllProducts);
+router.route("/product").get(getAllProducts);
 router.route("/admin/product/new").post(isAuthenticatedUser, authorizeRoles("admin"), createProduct);
 // got an casttype error here, this was because i was putting /:id instead of /:_id here
 // phirse error aaya to :id pe change kar diya, everything is now fine
