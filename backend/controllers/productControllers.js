@@ -32,10 +32,24 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
     const productCount = await Product.countDocuments();
     // console.log(productCount)
 
-    const apiFeature = new ApiFeatures(Product.find(), req.query).search().filter().pagination(resultPerPage);
+    const apiFeature = new ApiFeatures(Product.find(), req.query).search().filter()
+    // const apiFeature = new ApiFeatures(Product.find(), req.query).search().filter().pagination(resultPerPage);
+    // we have commented above feature of pagination, since we dont have to implement in case of no of sorted image less than resultPerPage
+    let products = await apiFeature.query;
+
+    let filteredProductCount = products.length;
+
+    apiFeature.pagination(resultPerPage);
+    
+    products = await apiFeature.query;
+    // console.log(products)
     // const products = await Product.find();
     // since apiFeature is class, we want to access it's properties
-    const products = await apiFeature.query; //this will return {"success": true,"products": []}
+    // const products = await apiFeature.query; //this will return {"success": true,"products": []}
+
+    // below line will give mongoose was already executed error
+    products = await apiFeature.query; //this will return {"success": true,"products": []} this is changred to let instead of const as ots value can change after filter
+
     // res.status(200).json({message:"Route is working fine"})
 
     // below lines will be returned in pstman terminal after searching for all products
@@ -44,6 +58,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
         resultPerPage,
         productCount,
         products,
+        filteredProductCount,
     });
 });
 

@@ -12,7 +12,7 @@ import {
 } from '../constants/productConstants';
 
 // by default keyword is empty, initialPage=1
-export const getProduct = (keyword="",currentPage=1) => async(dispatch) => {
+export const getProduct = (keyword="",currentPage=1, price=[0,50000]) => async(dispatch) => {
 
     try {
 
@@ -22,7 +22,7 @@ export const getProduct = (keyword="",currentPage=1) => async(dispatch) => {
 
         // here we're running our frontend at 3000 still we can get data from 4000 as we hae wrote "proxy":"http://localhost:4000" in frontend's package.json. If anything bad happens restart both backend and frontend servers then see again
         // const {data} = await axios.get('/api/v1/product');
-        const {data} = await axios.get(`/api/v1/product?keyword=${keyword}&page=${currentPage}`);
+        const {data} = await axios.get(`/api/v1/product?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}`);
         
         // console.log(data);
         

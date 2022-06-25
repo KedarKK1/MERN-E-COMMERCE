@@ -24,6 +24,7 @@ export const productReducer = (
                 products:action.payload.products,
                 productCount: action.payload.productCount,
                 resultPerPage: action.payload.resultPerPage,
+                filteredProductCount: action.payload.filteredProductCount,
             };
 
         case ALL_PRODUCT_FAIL:
