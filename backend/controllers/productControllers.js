@@ -39,16 +39,17 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
 
     let filteredProductCount = products.length;
 
-    apiFeature.pagination(resultPerPage);
-    
-    products = await apiFeature.query;
+    // done apiFeature2 to avoid mongoose error  
+    const apiFeature2 = new ApiFeatures(Product.find(), req.query).search().filter().pagination(resultPerPage);
+
+    products = await apiFeature2.query;
     // console.log(products)
     // const products = await Product.find();
     // since apiFeature is class, we want to access it's properties
     // const products = await apiFeature.query; //this will return {"success": true,"products": []}
 
     // below line will give mongoose was already executed error
-    products = await apiFeature.query; //this will return {"success": true,"products": []} this is changred to let instead of const as ots value can change after filter
+    // products = await apiFeature.query; //this will return {"success": true,"products": []} this is changred to let instead of const as ots value can change after filter
 
     // res.status(200).json({message:"Route is working fine"})
 

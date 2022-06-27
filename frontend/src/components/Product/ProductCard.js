@@ -24,7 +24,7 @@ const ProductCard = ({ product }) => {
   // }
 
   const options2={
-    value: product.rating,
+    value: product.ratings,
     readOnly: true,
     precision: 0.5,
   }

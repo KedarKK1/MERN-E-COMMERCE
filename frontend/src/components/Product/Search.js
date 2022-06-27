@@ -1,4 +1,5 @@
-import React, { useEffect, Fragment, useState } from 'react';
+import React, { Fragment, useState } from 'react';
+import MetaData from '../layout/MetaData';
 import "./Seach.css";
 
 
@@ -18,6 +19,8 @@ const Search = ({ history }) => {
 
   return (
     <Fragment>
+        <MetaData title={`Seach a Product --- Ecommerce`} />
+
         <form onSubmit={searchSubmitHandler} className="searchBox">
             <input type="text" className="search" placeholder="Search a Product..." onChange={(e)=>setKeyword(e.target.value)} />
             <input type="submit" value="search" />
