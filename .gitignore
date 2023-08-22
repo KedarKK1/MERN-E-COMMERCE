@@ -2,6 +2,9 @@ backend/config/config.env/
 /frontend/node_modules
 /node_modules
 /node_modules/*
+/package.json
+/package-lock.json
+/requirements.txt
 backend\config\config.env
 
 
