@@ -3,12 +3,14 @@ import thunk from 'redux-thunk';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { productDetailsReducer, productReducer } from './reducers/productReducers';
+import { userReducer } from './reducers/userReducer';
 
 // this will combine all reducers ino one single reducer
 // Don't create more than one store in an application! Instead, use combineReducers to create a single root reducer out of many
 const reducer = combineReducers({
     products: productReducer,
     productDetails:productDetailsReducer,
+    user: userReducer,
 });
 
 const initialState = {};

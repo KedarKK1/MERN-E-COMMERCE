@@ -10,6 +10,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 // since page needed refresh onClick they were not updating only url was changine but page not changing hence used HashRouter
 // import { BrowserRouter as Router, hashHistory, HashRouter } from 'react-router-dom';
 
+// options for alert in react-alert
 const options = {
   timeout: 5000,
   position: positions.BOTTOM_CENTER,

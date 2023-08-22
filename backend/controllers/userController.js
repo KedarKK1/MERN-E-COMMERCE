@@ -4,18 +4,31 @@ const User = require('../models/userModel');
 const sendToken = require('../utils/jwtToken');
 const sendMail = require('../utils/sendEmail');
 const crypto = require('crypto');
+const cloudinary = require('cloudinary');
 
 // register a user
 exports.registerUser = catchAsyncErrors(async(req,res,next)=>{
+
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar,{
+        // this is avatars folder in cloudnary see cloudnary website
+        folder: 'avatars',
+        width: 150,
+        crop: "scale",
+    } )
+
     const {name,email,password} = req.body;
 
     const user = await User.create({
         name,
         email,
         password,
+        // avatar:{
+        //     public_id:"this is simple public id",
+        //     url:"profilePictUrl"
+        // },
         avatar:{
-            public_id:"this is simple public id",
-            url:"profilePictUrl"
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
         },
     });
 
@@ -34,6 +47,12 @@ exports.registerUser = catchAsyncErrors(async(req,res,next)=>{
 
 // login user
 exports.loginUser = catchAsyncErrors(async(req,res,next)=>{
+
+// res.set('Access-Control-Allow-Origin', '*');
+// res.send({ "msg": "This has CORS enabled 🎈" })
+// console.log("Logged in")
+
+
     const {email,password} = req.body;
 
     // checking if user has given password and user bother

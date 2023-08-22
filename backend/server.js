@@ -1,14 +1,15 @@
 const app = require('./app');
 
 const dotenv = require('dotenv');
-dotenv.config({path:"./config/config.env"});
+const cloudinary = require('cloudinary');
+dotenv.config({ path: "./config/config.env" });
 
 // for uncaugh errors that is if i print console.log(youtube) where youtube is not a string then it is called uncaught reference errors
-process.on("uncaughtException", (err)=>{
+process.on("uncaughtException", (err) => {
   console.log(`Error: ${err.message}`);
   console.log("Shutting down the server due to uncaught exception error");
 
-  server.close(()=>{
+  server.close(() => {
     process.exit(1);
   });
 });
@@ -17,6 +18,13 @@ process.on("uncaughtException", (err)=>{
 // const dbConnect = require('./connect')
 const connectDatabase = require('./config/database')
 connectDatabase()
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET_KEY,
+  secure: process.env.CLOUDINARY_SECURE,
+})
 
 // const { MongoClient, ServerApiVersion } = require('mongodb');
 // const uri = "mongodb+srv://admin:admin@cluster0.cz97f.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
@@ -69,17 +77,17 @@ app.get('/', function (req, res) {
 
 const PORT = process.env.PORT || 4321;
 
-app.listen(PORT, ()=>{
-    console.log(`Server is running and listening on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server is running and listening on port ${PORT}`);
 });
 
 
 // for Unhandled Promise Rejection errors i.e. let's say someone changes your mongodb api code in .env file then it will give server error code
-process.on("unhandledRejection", (err)=>{
+process.on("unhandledRejection", (err) => {
   console.log(`Error: ${err.message}`);
   console.log("Shutting down the server due to Unhandled Promise Rejection");
 
-  server.close(()=>{
+  server.close(() => {
     process.exit(1);
   });
 });
